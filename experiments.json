@@ -1,5 +1,13 @@
 [
   {
+    "slug": "language-0052",
+    "type": "language",
+    "title": "Language 52",
+    "blurb": "Switch to English. It is trying.",
+    "date": "2026-10-17T20:21:25.000Z",
+    "art": "<svg viewBox=\"0 0 200 120\" role=\"img\" aria-label=\"A globe on a stand with a speech bubble beside it, the bubble holding a few wobbling letters\">\n    <circle cx=\"86\" cy=\"58\" r=\"34\" fill=\"#dfe8f5\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n    <g class=\"wobble\"><ellipse cx=\"86\" cy=\"58\" rx=\"14\" ry=\"34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></g>\n    <path d=\"M52 58h68M60 40h52M60 76h52\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"/>\n    <path d=\"M72 48q8-8 14 0t-4 12-10-4z\" fill=\"#2bb673\" stroke=\"currentColor\" stroke-width=\"1.5\"/>\n    <path d=\"M60 98h52M86 92v6\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n    <g class=\"bob\"><rect x=\"132\" y=\"22\" width=\"52\" height=\"30\" rx=\"8\" fill=\"#ffb020\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"M142 52l-6 10 14-10z\" fill=\"#ffb020\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"158\" y=\"43\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"700\" fill=\"#111\" font-family=\"Roboto, system-ui, sans-serif\">?!æ</text></g>\n    <path d=\"M10 112h180\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  </svg>"
+  },
+  {
     "slug": "shortcut-0051",
     "type": "shortcut",
     "title": "Shortcuts 51",

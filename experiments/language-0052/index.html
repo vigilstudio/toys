@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Language 52 · games and stuff</title>
+<style>
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; --panel: #b9c2cf; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; --panel: #3c4655; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; --panel: #3c4655; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .bob { animation: bob 2.4s ease-in-out infinite; }
+  .roll { animation: roll 3s ease-in-out infinite alternate; }
+  .wobble { animation: wobble 2.6s ease-in-out infinite; }
+  .pulse { animation: pulse 1.8s ease-in-out infinite; }
+  .c1 { animation: crumb 2.2s ease-in-out infinite; }
+  .c2 { animation: crumb 2.2s ease-in-out .5s infinite; }
+  .c3 { animation: crumb 2.2s ease-in-out 1s infinite; }
+  .peck { animation: peck 1.6s ease-in-out infinite; }
+  .bob, .roll, .wobble, .pulse, .c1, .c2, .c3, .peck { transform-box: fill-box; transform-origin: center; }
+  @keyframes crumb { 50% { transform: translateY(-3px) scale(.85); } }
+  @keyframes peck { 50% { transform: rotate(-12deg) translateY(2px); } }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+  @keyframes roll { to { transform: translateX(18px); } }
+  @keyframes wobble { 50% { transform: scale(.94, 1.04); } }
+  @keyframes pulse { 50% { transform: scale(1.08); } }
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .sheet { fill: var(--paper); }
+  .hero .body { fill: var(--wall); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .lang { max-width: 360px; margin: 16px auto 0; min-height: 112px; box-sizing: border-box; }
+  .tag { font-size: .9rem; opacity: .75; }
+  .name { font-size: 1.8rem; font-weight: 700; margin: 4px 0; overflow-wrap: anywhere; }
+  .hello { font-size: 1.2rem; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A globe on a stand with a speech bubble beside it, the bubble holding a few wobbling letters">
+    <circle cx="86" cy="58" r="34" fill="#dfe8f5" stroke="currentColor" stroke-width="2.5"/>
+    <g class="wobble"><ellipse cx="86" cy="58" rx="14" ry="34" fill="none" stroke="currentColor" stroke-width="2"/></g>
+    <path d="M52 58h68M60 40h52M60 76h52" stroke="currentColor" stroke-width="2" fill="none"/>
+    <path d="M72 48q8-8 14 0t-4 12-10-4z" fill="#2bb673" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M60 98h52M86 92v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <g class="bob"><rect x="132" y="22" width="52" height="30" rx="8" fill="#ffb020" stroke="currentColor" stroke-width="2"/><path d="M142 52l-6 10 14-10z" fill="#ffb020" stroke="currentColor" stroke-width="2"/><text x="158" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="#111" font-family="Roboto, system-ui, sans-serif">?!æ</text></g>
+    <path d="M10 112h180" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  </svg></div>
+<h1>Language 52</h1><p class="blurb">Switch to English. It is trying.</p>
+<div class="goal" id="goal"></div>
+<div class="card lang"><div class="tag">Current language</div><div class="name" id="name" lang="en">Unknown</div><div class="hello" id="hello">&nbsp;</div></div>
+<div class="row"><button type="button" id="sw" aria-describedby="msg">Switch to English</button></div>
+<div class="msg" id="msg" role="status" aria-live="polite"></div>
+<div class="hint">Click, or Tab, Enter and Space. Nothing is sent or kept.</div>
+<div class="row"><button type="button" class="ghost" id="reset">Start again</button></div>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled || b.getAttribute("aria-disabled") === "true") return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  // Each press: [language, greeting, language code, message]. English arrives only on the last press.
+  const STEPS = [
+    ["Fran\u00e7ais", "Bonjour.", "fr", "Switched. That was not English, but it was close to some."],
+    ["Cymraeg", "Bore da.", "cy", "Switched to Welsh. Wales is next to England. That should count."],
+    ["Esperanto", "Saluton.", "eo", "Switched to Esperanto. Everyone's second language, nobody's first."],
+    ["Latina", "Salve.", "la", "Switched to Latin. English did borrow a lot of it."],
+    ["Igpay Atinlay", "Ello-hay.", "en", "Switched to Pig Latin. It is English, wearing a hat."],
+    ["English", "Hello.", "en", "Switched to English. It was the sixth press all along."],
+  ];
+  let n;
+  function press() {
+    if ($("sw").getAttribute("aria-disabled") === "true") return;
+    const st = STEPS[n]; n++;
+    $("name").textContent = st[0];
+    $("name").lang = st[2];
+    $("hello").textContent = st[1];
+    $("hello").lang = st[2];
+    $("msg").textContent = st[3];
+    if (n === STEPS.length) {
+      $("goal").textContent = "English.";
+      $("sw").setAttribute("aria-disabled", "true");
+      $("sw").textContent = "English";
+    } else {
+      $("goal").textContent = "Switch to English.";
+    }
+  }
+  $("sw").onclick = press;
+  function start() {
+    n = 0;
+    $("sw").removeAttribute("aria-disabled");
+    $("sw").textContent = "Switch to English";
+    $("name").textContent = "Unknown";
+    $("name").lang = "en";
+    $("hello").innerHTML = "&nbsp;";
+    $("goal").textContent = "Switch to English.";
+    $("msg").textContent = "";
+  }
+  $("reset").onclick = start;
+  start();
+</script>
+</body>
+</html>
