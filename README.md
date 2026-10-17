@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `top` | A back-to-top button that scrolls to section 7, the footer, the middle, the small print and section 2 instead of the top, and goes to the real top by itself once you stop pressing for five seconds. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `language` | A language switcher whose Switch to English button switches to French, Welsh, Esperanto, Latin and Pig Latin, and on the sixth press to English. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `shortcut` | A shortcut list, opened by the button or by pressing ?, that names the wrong keys for Save, Undo and Print (Ctrl+Z, Alt+F4, F1, Ctrl+Shift+S, maybe), and on the sixth press lists Ctrl+S. Click, or Tab, Enter and Space, or ?. Nothing is sent or kept. |
 | `zoom` | A zoom control, Zoom in and Zoom out alike, that zooms the wrong way or onto the wrong thing (further out, the tree, the cow, some sky, everything) while you look for a very small dog, and on the sixth press zooms onto it. Click, or Tab, Enter and Space. Nothing is sent or kept. |
