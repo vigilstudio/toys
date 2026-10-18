@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop 60 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .sheet { fill: var(--paper); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .ring { animation: spin 6s linear infinite; transform-box: fill-box; transform-origin: center; }
+  .peek { animation: lean 1.6s ease-in-out infinite alternate; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes lean { to { transform: translateX(6px); } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible, .stage:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .stage { display: block; width: 100%; max-width: 480px; margin: 12px auto; border-radius: 8px; touch-action: none; cursor: grab; }
+  .stage svg { display: block; width: 100%; height: auto; border-radius: 8px; }
+  .dim { fill: #000; opacity: .55; }
+  .edge { fill: none; stroke: #fff; stroke-width: 1.5; }
+  .stats { display: flex; justify-content: center; gap: 16px; font-variant-numeric: tabular-nums; }
+  .out { display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 88px; }
+  .out svg { width: 80px; height: 80px; border-radius: 50%; background: var(--wall); }
+  .out svg[hidden] { display: none; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A round avatar frame holding a face, with a second face that keeps peeking in from behind">
+    <circle class="ring" cx="100" cy="62" r="46" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="8 6"/>
+    <g class="peek"><circle cx="118" cy="54" r="24" fill="#ff5c8a" stroke="currentColor" stroke-width="2.5"/><circle cx="125" cy="50" r="2.5" fill="currentColor"/></g>
+    <circle cx="94" cy="66" r="24" fill="#ffb020" stroke="currentColor" stroke-width="2.5"/>
+    <circle cx="86" cy="62" r="2.5" fill="currentColor"/><circle cx="102" cy="62" r="2.5" fill="currentColor"/><path d="M85 74q9 7 18 0" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  </svg></div>
+<h1>Crop 60</h1><p class="blurb">Profile photo. Just you, please.</p>
+<div class="stage" id="stage" tabindex="0" role="group" aria-label="Crop box. Arrow keys move it, Shift for bigger steps."><svg id="photo" viewBox="0 0 240 160" aria-hidden="true"></svg></div>
+<div class="stats" aria-live="off"><span>You: <b id="me"></b></span><span>Stranger: <b id="st"></b></span></div>
+<div class="goal" id="goal">Crop out the stranger.</div>
+<div class="out"><svg id="av" viewBox="0 0 240 160" hidden aria-label="Your new avatar"></svg><p class="msg" id="msg" role="status" aria-live="polite"></p></div>
+<div class="row"><button type="button" id="save">Save avatar</button><button type="button" class="ghost" id="reset">Start over</button></div>
+<p class="hint">Drag the circle, or Tab to it and use arrows. Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled || b.id === "save") return; // Save bursts on its own, only on success
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  const ME = [100, 84, 24], ST = [108, 78, 30], R = 34, W = 240, H = 160;
+  const scene = '<rect width="240" height="160" fill="#dfe8f5"/><rect y="124" width="240" height="36" fill="#9fb4cf"/>' +
+    '<circle cx="108" cy="78" r="30" fill="#ff5c8a"/><circle cx="116" cy="72" r="3" fill="#111"/><path d="M104 96q8 5 16 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>' +
+    '<circle cx="100" cy="84" r="24" fill="#ffb020"/><circle cx="92" cy="80" r="3" fill="#111"/><circle cx="108" cy="80" r="3" fill="#111"/><path d="M91 92q9 7 18 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>';
+  const inC = (c, x, y) => Math.hypot(x - c[0], y - c[1]) <= c[2];
+  const pts = []; let tm = 0, ts = 0;
+  for (let x = 0; x < W; x += 2) for (let y = 0; y < H; y += 2) {
+    if (inC(ME, x, y)) { pts.push([x, y, 1]); tm++; } else if (inC(ST, x, y)) { pts.push([x, y, 0]); ts++; }
+  }
+  const start = { x: 100, y: 84 };
+  let cx = start.x, cy = start.y, saved = false;
+  $("photo").innerHTML = scene + '<path class="dim" id="dim" fill-rule="evenodd"/><circle class="edge" id="edge" r="' + R + '"/>';
+  function stats() {
+    let m = 0, s = 0;
+    for (const p of pts) if (Math.hypot(p[0] - cx, p[1] - cy) <= R) { if (p[2]) m++; else s++; }
+    return [Math.round(100 * m / tm), Math.round(100 * s / ts)];
+  }
+  function draw() {
+    $("dim").setAttribute("d", "M0 0H240V160H0Z M" + (cx - R) + " " + cy + "a" + R + " " + R + " 0 1 0 " + 2 * R + " 0a" + R + " " + R + " 0 1 0 " + (-2 * R) + " 0Z");
+    $("edge").setAttribute("cx", cx); $("edge").setAttribute("cy", cy);
+    const [m, s] = stats(); $("me").textContent = m + "%"; $("st").textContent = s + "%";
+    return [m, s];
+  }
+  function move(x, y) { cx = Math.max(R, Math.min(W - R, x)); cy = Math.max(R, Math.min(H - R, y)); draw(); }
+  let drag = false;
+  const pos = (e) => { const r = $("photo").getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+  $("stage").addEventListener("pointerdown", (e) => { drag = true; $("stage").setPointerCapture(e.pointerId); move(...pos(e)); });
+  $("stage").addEventListener("pointermove", (e) => { if (drag) move(...pos(e)); });
+  $("stage").addEventListener("pointerup", () => { drag = false; });
+  $("stage").addEventListener("keydown", (e) => {
+    const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (!k) return; e.preventDefault();
+    const st = e.shiftKey ? 12 : 3; move(cx + k[0] * st, cy + k[1] * st);
+  });
+  $("save").onclick = () => {
+    const [m, s] = draw();
+    $("av").hidden = false;
+    $("av").setAttribute("viewBox", (cx - R) + " " + (cy - R) + " " + 2 * R + " " + 2 * R);
+    $("av").innerHTML = scene;
+    let t;
+    if (s === 0 && m < 5) t = "Saved. Stranger gone. So are you.";
+    else if (s === 0) t = "Saved. Stranger gone. So is " + (100 - m) + "% of you.";
+    else if (m === 100) t = "Saved. All of you, and " + s + "% of a stranger. Looks close.";
+    else t = "Saved. " + m + "% you, " + s + "% stranger.";
+    $("msg").textContent = t;
+    if (s === 0) { $("goal").textContent = "Stranger cropped out."; const q = $("save").getBoundingClientRect(); confetti(q.left + q.width / 2, q.top); }
+    else $("goal").textContent = "Crop out the stranger.";
+  };
+  $("reset").onclick = () => { move(start.x, start.y); $("av").hidden = true; $("msg").textContent = ""; $("goal").textContent = "Crop out the stranger."; };
+  draw();
+</script>
+</body>
+</html>
