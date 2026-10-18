@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datepicker 63 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button:disabled, button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .bubble { fill: var(--wall); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .pg { transform-box: fill-box; transform-origin: 0 50%; animation: flip 2.6s ease-in infinite; }
+  .p2 { animation-delay: .8s; } .p3 { animation-delay: 1.6s; }
+  @keyframes flip { 0% { transform: translateX(0) rotate(0); opacity: 1; } 70%, 100% { transform: translateX(-26px) rotate(-14deg); opacity: 0; } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .cal { background: var(--soft); border-radius: 14px; padding: 12px; margin: 12px auto; max-width: 340px; }
+  .top2 { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .top2 button { margin: 0; }
+  .top2 strong { flex: 1; font-variant-numeric: tabular-nums; }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+  .grid span { font-size: .75rem; opacity: .7; }
+  .grid button { margin: 0; padding: 8px 0; min-height: 40px; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); font-variant-numeric: tabular-nums; }
+  .grid button.pick { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+  .grid i { visibility: hidden; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A wall calendar with a stack of torn-off pages flipping away behind it">
+    <g class="pg p1"><rect x="62" y="16" width="84" height="84" rx="6" fill="#ffffff" stroke="currentColor" stroke-width="2"/></g>
+    <g class="pg p2"><rect x="56" y="12" width="84" height="84" rx="6" fill="#ffffff" stroke="currentColor" stroke-width="2"/></g>
+    <rect x="50" y="8" width="84" height="84" rx="6" fill="#dfe8f5" stroke="currentColor" stroke-width="2.5"/>
+    <rect x="50" y="8" width="84" height="18" rx="6" fill="#ff5c8a" stroke="currentColor" stroke-width="2.5"/>
+    <path d="M66 8v-4M118 8v-4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <path d="M60 38h64M60 52h64M60 66h64M60 80h40" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round"/>
+    <g class="pg p3"><path d="M150 100l12-8 8 10-12 8z" fill="#ffb020" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+  </svg></div>
+<h1>Datepicker 63</h1><p class="blurb">Date of birth. Earlier.</p>
+<div class="cal">
+  <div class="top2">
+    <button type="button" id="prev" aria-label="Earlier month">&lsaquo; Earlier</button>
+    <strong id="mon" aria-live="off"></strong>
+    <button type="button" id="next" aria-label="Later month">Later &rsaquo;</button>
+  </div>
+  <div class="grid" id="grid" role="group" aria-label="Days"></div>
+</div>
+<div class="goal" id="goal"></div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<div class="row"><button type="button" class="ghost" id="reset">Start over</button></div>
+<p class="hint">The calendar opens on today. Click, or Tab, arrows, Enter and Space. Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.toLocaleString("en-GB");
+  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const TY = 2026, TM = 9, TD = 18; // today, fixed
+  const GY = 2000, GM = 1, GD = 29;
+  const GOAL_DATE = GD + " " + MONTHS[GM] + " " + GY;
+  let off, done, tries, focusDay;
+  const note = (t) => { $("msg").textContent = t; };
+  const idx = () => TY * 12 + TM - off;
+  const dim = (y, m) => new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  function draw(keepFocus) {
+    const y = Math.floor(idx() / 12), m = idx() % 12;
+    $("mon").textContent = MONTHS[m] + " " + y;
+    $("prev").disabled = done; $("next").disabled = done || off === 0;
+    const g = $("grid"); g.innerHTML = "";
+    ["Mo","Tu","We","Th","Fr","Sa","Su"].forEach((d) => { const s = document.createElement("span"); s.textContent = d; g.appendChild(s); });
+    const lead = (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7;
+    for (let i = 0; i < lead; i++) g.appendChild(document.createElement("i"));
+    const n = dim(y, m);
+    if (focusDay > n) focusDay = n;
+    for (let d = 1; d <= n; d++) {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = d; b.dataset.d = d;
+      b.setAttribute("aria-label", d + " " + MONTHS[m] + " " + y);
+      b.tabIndex = d === focusDay ? 0 : -1;
+      const isGoal = y === GY && m === GM && d === GD;
+      if (done && isGoal) { b.classList.add("pick"); b.setAttribute("aria-pressed", "true"); }
+      if (done && !isGoal) b.disabled = true; // the chosen day stays focusable so focus does not fall to the page
+      b.onclick = () => choose(d);
+      b.onfocus = () => { focusDay = d; };
+      g.appendChild(b);
+    }
+    if (keepFocus) { const f = g.querySelector('button[tabindex="0"]'); if (f && !done) f.focus(); }
+  }
+  function choose(d) {
+    if (done) return;
+    const y = Math.floor(idx() / 12), m = idx() % 12;
+    if (y === GY && m === GM && d === GD) {
+      done = true; focusDay = d;
+      const days = Math.round((Date.UTC(TY, TM, TD) - Date.UTC(GY, GM, GD)) / 864e5);
+      $("goal").textContent = "Born.";
+      note("Accepted. " + GOAL_DATE + ": " + fmt(off) + " presses of Earlier ago, " + fmt(days) + " days, and a birthday every fourth year.");
+      draw(false);
+      $("grid").querySelector(".pick").focus();
+      return;
+    }
+    tries++;
+    const age = off;
+    note(y === GY && m === GM ? "Right month. Wrong day." : "Born " + d + " " + MONTHS[m] + " " + y + "? That is " + fmt(age) + " months ago. Not you.");
+  }
+  function step(k) {
+    if (done) return;
+    if (k < 0 && off === 0) return;
+    off += k > 0 ? 1 : -1;
+    if (off < 0) off = 0;
+    draw(false);
+    const y = Math.floor(idx() / 12);
+    if (off % 12 === 0 && off > 0) note("Another year. " + y + ".");
+    else if (off === 24) note("Two years. The calendar has no other way of going back.");
+    else if (off === 120) note("A decade of Earlier.");
+  }
+  $("prev").onclick = () => step(1);
+  $("next").onclick = () => step(-1);
+  $("grid").addEventListener("keydown", (e) => {
+    const b = e.target.closest("button[data-d]");
+    if (!b || done) return;
+    const y = Math.floor(idx() / 12), m = idx() % 12, n = dim(y, m);
+    let d = +b.dataset.d;
+    const k = e.key;
+    if (k === "ArrowRight") d++; else if (k === "ArrowLeft") d--; else if (k === "ArrowDown") d += 7; else if (k === "ArrowUp") d -= 7;
+    else if (k === "Home") d = 1; else if (k === "End") d = n; else return;
+    e.preventDefault();
+    focusDay = Math.min(Math.max(d, 1), n);
+    draw(true);
+  });
+  function init() {
+    off = 0; done = false; tries = 0; focusDay = TD;
+    $("goal").textContent = "Enter your date of birth: " + GOAL_DATE + "."; note(""); draw(false);
+  }
+  $("reset").onclick = init;
+  init();
+</script>
+</body>
+</html>

@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `datepicker` | A date-of-birth calendar that only goes back one month at a time (Earlier), from today to 29 February 2000, which is 320 presses. Pick the day when you get there. Click, or Tab, arrows, Enter and Space (hold Enter to hurry). Nothing is sent or kept. |
 | `reaction` | A post that says Had a sandwich, and a bar of six emoji reactions. Each reaction is reacted to by a crowd (x40, and the others x6); pressing yours again removes only yours. Hide reactions is the only calm, and they are all still happening. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `share` | A share sheet with one photo and three ways to send it: Mum, a family group of 47, or Copy link. Each pick spreads the photo to everyone they know (3x, 9x, or the whole internet); asking for one person never stays one. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `trash` | A bin with one item and an Empty trash button. Delete permanently deletes it and saves a receipt for the deletion, which is the new one item; Cancel is the only way to an empty trash. Click, or Tab, Enter and Space. Nothing is sent or kept. |
