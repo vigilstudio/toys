@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `code` | A six-box verification code field, with the code in a text that says never to share it. Any digit that matches the code is refused as shared; six wrong digits get you verified. Click the keys, or type, with Backspace and arrows. Nothing is sent or kept. |
 | `bell` | A notification bell with three unread items. Each Mark all as read makes a new notification about having marked them, and the fourth press, Turn off notifications, is the only way to nothing new (and one email). Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `radio` | A delivery-speed radio group (Yesterday, Same day, Next day, Express, Standard) that selects the option after the one you chose. Choosing the option it already has is the only way it stays. Click, or Tab, arrows, Enter and Space. Nothing is sent or kept. |
 | `top` | A back-to-top button that scrolls to section 7, the footer, the middle, the small print and section 2 instead of the top, and goes to the real top by itself once you stop pressing for five seconds. Click, or Tab, Enter and Space. Nothing is sent or kept. |
