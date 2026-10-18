@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Otp 64 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button:disabled, button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .hand { transform-box: view-box; transform-origin: 150px 64px; animation: tick 3s steps(12) infinite; }
+  .dg { animation: blink 1.6s steps(3) infinite; }
+  @keyframes tick { to { transform: rotate(360deg); } }
+  @keyframes blink { 50% { opacity: .35; } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .thread { max-width: 340px; min-height: 148px; margin: 12px auto; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; text-align: left; }
+  .thread div { background: var(--wall); border-radius: 14px 14px 14px 2px; padding: 8px 14px; overflow-wrap: anywhere; }
+  .thread div:not(:last-child) { opacity: .7; }
+  .thread b { letter-spacing: .2em; font-variant-numeric: tabular-nums; }
+  .count { min-height: 1.4em; font-variant-numeric: tabular-nums; }
+  .boxes { display: flex; justify-content: center; gap: 8px; margin: 8px 0; }
+  .boxes input { width: 44px; max-width: 13vw; height: 56px; box-sizing: border-box; text-align: center; font: inherit; font-size: 1.6rem; font-weight: 700; color: var(--ink); background: var(--soft); border: 0; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--ink); padding: 0; }
+  .boxes input:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .boxes input.no { animation: shake .35s; box-shadow: inset 0 0 0 3px #d93025; }
+  .boxes input.ok { box-shadow: inset 0 0 0 3px #2bb673; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  .pad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; max-width: 300px; margin: 8px auto; }
+  .pad button { margin: 0; padding: 10px 0; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A phone with a speech bubble, and a small stopwatch ticking beside it">
+    <rect x="62" y="8" width="60" height="100" rx="9" fill="#dfe8f5" stroke="currentColor" stroke-width="2.5"/>
+    <rect x="72" y="22" width="40" height="22" rx="5" fill="#ffffff" stroke="currentColor" stroke-width="2"/>
+    <g class="dg"><path d="M78 33h4M88 33h4M98 33h4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></g>
+    <rect x="72" y="52" width="30" height="14" rx="5" fill="#ffffff" stroke="currentColor" stroke-width="2"/>
+    <path d="M92 104h0" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="150" cy="64" r="18" fill="#ffb020" stroke="currentColor" stroke-width="2.5"/>
+    <path d="M144 42h12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <g class="hand"><path d="M150 64V52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></g>
+  </svg></div>
+<h1>Otp 64</h1><p class="blurb">We are sending your code. Please hold.</p>
+<div class="thread" id="thread" aria-label="Messages"></div>
+<div class="count" id="count"></div>
+<div class="goal" id="goal"></div>
+<div class="boxes" id="boxes" role="group" aria-label="Verification code, six digits"></div>
+<div class="pad" id="pad"></div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<div class="row"><button type="button" class="ghost" id="reset">Start again</button></div>
+<p class="hint">Click the keys, or type, with Backspace and arrows. Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  // Round 1: the code arrives one digit at a time. Round 2: "a second code to confirm the first", good for 10 seconds.
+  const ONE = "720518", TWO = ["904263", "317786", "658021"];
+  const GAP = 2200, LIFE = 10;
+  let round, code, arrived, done, cur = 0, wrong = 0, n2 = 0, timers = [], bx = [], until = 0;
+  const boxes = $("boxes");
+  const say = (t) => { $("msg").textContent = t; };
+  function text(html) {
+    const d = document.createElement("div"); d.innerHTML = html;
+    const th = $("thread"); th.appendChild(d);
+    while (th.children.length > 4) th.firstChild.remove();
+  }
+  const later = (f, ms) => { const t = setTimeout(f, ms); timers.push(t); };
+  function clearBoxes() { bx.forEach((b) => { b.value = ""; b.className = ""; b.readOnly = false; }); }
+  function firstEmpty() { return Math.max(0, bx.findIndex((b) => !b.value)); }
+  for (let i = 0; i < 6; i++) {
+    const t = document.createElement("input");
+    t.type = "text"; t.inputMode = "numeric"; t.maxLength = 1; t.autocomplete = "off";
+    t.setAttribute("aria-label", "Digit " + (i + 1) + " of 6");
+    t.onkeydown = (e) => {
+      if (done || !round || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (/^\d$/.test(e.key)) { e.preventDefault(); put(i, e.key); }
+      else if (e.key === "Backspace") { e.preventDefault(); if (t.value) t.value = ""; else if (i > 0) { bx[i - 1].value = ""; bx[i - 1].focus(); } }
+      else if (e.key === "ArrowLeft" && i > 0) { e.preventDefault(); bx[i - 1].focus(); }
+      else if (e.key === "ArrowRight" && i < 5) { e.preventDefault(); bx[i + 1].focus(); }
+      else if (e.key.length === 1) e.preventDefault();
+    };
+    t.oninput = () => { t.value = ""; };
+    boxes.appendChild(t); bx.push(t);
+  }
+  function refuse(i) { const t = bx[i]; t.classList.remove("no"); void t.offsetWidth; t.value = ""; t.className = "no"; t.focus(); }
+  function put(i, d) {
+    if (done || !round) return; // round 0 is the pause between codes: nothing is accepted
+    bx[i].classList.remove("no");
+    if (i >= arrived) { refuse(i); say("Not yet. Digit " + (i + 1) + " is on its way."); return; }
+    if (d !== code[i]) {
+      refuse(i); wrong++;
+      say(wrong % 2 ? "That is not digit " + (i + 1) + ". Please check your messages." : "Still not digit " + (i + 1) + ". We will wait.");
+      return;
+    }
+    bx[i].value = d; say("");
+    if (bx.every((b) => b.value)) finish(); else bx[firstEmpty()].focus();
+  }
+  function finish() {
+    if (round === 1) {
+      bx.forEach((b) => { b.className = "ok"; b.readOnly = true; });
+      $("goal").textContent = "Code accepted."; say("");
+      later(() => {
+        text("For your security, we have sent a second code to confirm the first.");
+        round = 2; sendTwo();
+      }, 1400);
+      round = 0;
+      return;
+    }
+    done = true; clearTimeout(tick); $("count").textContent = "";
+    bx.forEach((b) => { b.className = "ok"; b.readOnly = true; });
+    $("goal").textContent = "Verified.";
+    say("Mistakes: " + wrong + ". Expired codes: " + n2 + ". Thank you for your patience.");
+    const q = boxes.getBoundingClientRect();
+    confetti(q.left + q.width / 2, q.top);
+  }
+  let tick;
+  function sendTwo() {
+    code = TWO[n2 % TWO.length]; arrived = 6; clearBoxes(); $("goal").textContent = "";
+    text("Your new code is <b>" + code.split("").join(" ") + "</b>. It expires in " + LIFE + " seconds.");
+    bx[0].focus(); until = Date.now() + LIFE * 1000; countdown();
+  }
+  function countdown() {
+    clearTimeout(tick);
+    if (done || round !== 2) return;
+    const left = Math.ceil((until - Date.now()) / 1000);
+    if (left <= 0) {
+      n2++; $("count").textContent = "";
+      text("That code has expired.");
+      say("Expired. Sending another.");
+      round = 0;
+      later(() => { text("Another second code, to confirm the first."); round = 2; sendTwo(); }, 1600);
+      return;
+    }
+    $("count").textContent = "Code expires in " + left + "s";
+    tick = setTimeout(countdown, 250);
+  }
+  function send(k) {
+    if (k > 6) return;
+    arrived = k;
+    text("Your code, digit " + k + " of 6: <b>" + code[k - 1] + "</b>");
+    if (k < 6) later(() => send(k + 1), GAP);
+  }
+  const pad = $("pad");
+  [..."1234567890"].forEach((d) => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = d;
+    b.setAttribute("aria-label", "Digit " + d);
+    b.onclick = () => put(firstEmpty(), d);
+    pad.appendChild(b);
+  });
+  function start() {
+    timers.forEach(clearTimeout); timers = []; clearTimeout(tick);
+    done = false; wrong = 0; n2 = 0; round = 1; code = ONE; arrived = 0; clearBoxes();
+    $("thread").innerHTML = ""; $("count").textContent = ""; $("goal").textContent = ""; say("");
+    text("Sending your code...");
+    later(() => send(1), 1500);
+  }
+  $("reset").onclick = () => { start(); bx[0].focus(); };
+  start();
+</script>
+</body>
+</html>

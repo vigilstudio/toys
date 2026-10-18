@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `otp` | A six-box code field where the code arrives one digit at a time, two seconds apart; type ahead and it is Not yet. Then a second code arrives to confirm the first, and it expires in 10 seconds (a new one is sent if it does). Click the keys, or type, with Backspace and arrows. Nothing is sent or kept. |
 | `datepicker` | A date-of-birth calendar that only goes back one month at a time (Earlier), from today to 29 February 2000, which is 320 presses. Pick the day when you get there. Click, or Tab, arrows, Enter and Space (hold Enter to hurry). Nothing is sent or kept. |
 | `reaction` | A post that says Had a sandwich, and a bar of six emoji reactions. Each reaction is reacted to by a crowd (x40, and the others x6); pressing yours again removes only yours. Hide reactions is the only calm, and they are all still happening. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `share` | A share sheet with one photo and three ways to send it: Mum, a family group of 47, or Copy link. Each pick spreads the photo to everyone they know (3x, 9x, or the whole internet); asking for one person never stays one. Click, or Tab, Enter and Space. Nothing is sent or kept. |
