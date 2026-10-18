@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trash 59 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .sheet { fill: var(--paper); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .lid { animation: lift 1.8s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: left bottom; }
+  .note { animation: hop 1.8s ease-in-out infinite alternate; }
+  @keyframes lift { to { transform: rotate(-8deg) translateY(-3px); } }
+  @keyframes hop { to { transform: translateY(-6px) rotate(6deg); } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .shop { max-width: 360px; margin: 12px auto; text-align: left; background: var(--soft); border-radius: 8px; padding: 12px; }
+  .shop b { display: block; }
+  .file { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .file span:last-child { font-variant-numeric: tabular-nums; opacity: .75; white-space: nowrap; }
+  .ask { max-width: 360px; margin: 12px auto; padding: 12px; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--ink); }
+  .ask[hidden] { display: none; }
+  .empty { opacity: .75; font-style: italic; }
+  .price { font-variant-numeric: tabular-nums; margin: 2px 0 8px; }
+  .line { display: flex; justify-content: space-between; gap: 8px; font-variant-numeric: tabular-nums; margin: 4px 0; }
+  .bar { height: 8px; border-radius: 4px; background: var(--paper); box-shadow: inset 0 0 0 2px var(--ink); overflow: hidden; margin: 8px 0 4px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  .qty { display: inline-block; min-width: 1.6em; padding: 0 6px; border-radius: 99px; background: var(--ink); color: var(--paper); font-size: .85rem; text-align: center; margin-left: 6px; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A bin with a lid that keeps lifting, and a single sheet of paper that will not stay in it">
+    <g class="lid"><path d="M58 38h84" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M90 38v-6h20v6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></g>
+    <path d="M64 46h72l-6 60H70z" class="sheet" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M85 56l2 40M100 56v40M115 56l-2 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+    <g class="note"><rect x="90" y="14" width="22" height="28" rx="2" fill="#ffb020" stroke="currentColor" stroke-width="2.5"/><path d="M95 22h12M95 28h12M95 34h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+  </svg></div>
+<h1>Trash 59</h1><p class="blurb">One item in the trash. Empty it.</p>
+<div class="shop"><b id="count"></b>
+<div id="list" aria-live="polite"></div></div>
+<div class="ask" id="ask" role="group" aria-labelledby="askt" hidden><b id="askt"></b><p class="hint">You can't undo this.</p>
+<div class="row"><button type="button" id="yes">Delete permanently</button><button type="button" class="ghost" id="no">Cancel</button></div></div>
+<div class="goal" id="goal"></div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<div class="row"><button type="button" id="go">Empty trash</button><button type="button" class="ghost" id="back">Put one back</button></div>
+<p class="hint">Click, or Tab, Enter and Space. Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  let n = 0, empty = false;
+  const items = 1; // the trash always holds exactly one file: the old one, or its receipt
+  const kb = (v) => v.toFixed(1) + " KB";
+  const name = () => n === 0 ? "Old shopping list.txt" : "Receipt for emptying trash" + (n > 1 ? " (" + n + ")" : "") + ".txt";
+  function show() {
+    $("count").textContent = empty ? "Trash" : "Trash \u00b7 " + items + " item";
+    $("askt").textContent = "Permanently delete " + items + " item?";
+    $("list").innerHTML = empty ? '<div class="empty">Nothing here.</div>' : '<div class="file"><span></span><span>' + kb(0.4 + n * 0.1) + '</span></div>';
+    if (!empty) $("list").firstChild.firstChild.textContent = name();
+    $("go").setAttribute("aria-disabled", empty ? "true" : "false");
+    $("go").textContent = empty ? "Nothing to empty" : "Empty trash";
+    $("back").hidden = !empty;
+  }
+  $("go").onclick = () => {
+    if (empty) return;
+    $("ask").hidden = false; $("yes").focus();
+    $("msg").textContent = "";
+  };
+  $("yes").onclick = () => {
+    const gone = name(); n++;
+    $("ask").hidden = true;
+    $("msg").textContent = "Deleted " + gone + ". Saved " + name() + ", as proof.";
+    show(); $("go").focus();
+  };
+  $("no").onclick = () => {
+    $("ask").hidden = true; empty = true;
+    $("goal").textContent = "Trash is empty.";
+    $("msg").textContent = "Cancelled. Trash emptied.";
+    const q = $("count").getBoundingClientRect(); confetti(q.left + q.width / 2, q.top);
+    show(); $("back").focus();
+  };
+  $("back").onclick = () => { n = 0; empty = false; $("goal").textContent = ""; $("msg").textContent = "Old shopping list.txt is back. You did ask."; show(); $("go").focus(); };
+  show();
+</script>
+</body>
+</html>

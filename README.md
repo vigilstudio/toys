@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `trash` | A bin with one item and an Empty trash button. Delete permanently deletes it and saves a receipt for the deletion, which is the new one item; Cancel is the only way to an empty trash. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `cart` | A basket with one spoon at £6.00 and free delivery at £40.00. Every Add to basket moves free delivery to £3.50 beyond the total, until the sixth spoon, which unlocks it with a £7.00 handling fee. Remove one and Empty basket work too. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `signature` | A delivery signature pad that refuses any signature it can read. Scribble, then end with a line underneath as the last stroke; a neat name is rejected as too legible. Draw with the mouse or a finger, or focus the pad and use Space and the arrow keys (Shift for bigger steps). Nothing is sent or kept. |
 | `code` | A six-box verification code field, with the code in a text that says never to share it. Any digit that matches the code is refused as shared; six wrong digits get you verified. Click the keys, or type, with Backspace and arrows. Nothing is sent or kept. |

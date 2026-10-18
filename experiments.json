@@ -1,5 +1,13 @@
 [
   {
+    "slug": "trash-0059",
+    "type": "trash",
+    "title": "Trash 59",
+    "blurb": "One item in the trash. Empty it.",
+    "date": "2026-10-18T10:21:15.000Z",
+    "art": "<svg viewBox=\"0 0 200 120\" role=\"img\" aria-label=\"A bin with a lid that keeps lifting, and a single sheet of paper that will not stay in it\">\n    <g class=\"lid\"><path d=\"M58 38h84\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M90 38v-6h20v6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/></g>\n    <path d=\"M64 46h72l-6 60H70z\" class=\"sheet\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>\n    <path d=\"M85 56l2 40M100 56v40M115 56l-2 40\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" opacity=\".45\"/>\n    <g class=\"note\"><rect x=\"90\" y=\"14\" width=\"22\" height=\"28\" rx=\"2\" fill=\"#ffb020\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M95 22h12M95 28h12M95 34h7\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></g>\n  </svg>"
+  },
+  {
     "slug": "cart-0058",
     "type": "cart",
     "title": "Cart 58",
