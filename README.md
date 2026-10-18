@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `radio` | A delivery-speed radio group (Yesterday, Same day, Next day, Express, Standard) that selects the option after the one you chose. Choosing the option it already has is the only way it stays. Click, or Tab, arrows, Enter and Space. Nothing is sent or kept. |
 | `top` | A back-to-top button that scrolls to section 7, the footer, the middle, the small print and section 2 instead of the top, and goes to the real top by itself once you stop pressing for five seconds. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `language` | A language switcher whose Switch to English button switches to French, Welsh, Esperanto, Latin and Pig Latin, and on the sixth press to English. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `shortcut` | A shortcut list, opened by the button or by pressing ?, that names the wrong keys for Save, Undo and Print (Ctrl+Z, Alt+F4, F1, Ctrl+Shift+S, maybe), and on the sixth press lists Ctrl+S. Click, or Tab, Enter and Space, or ?. Nothing is sent or kept. |

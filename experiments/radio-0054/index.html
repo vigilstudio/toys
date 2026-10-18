@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radio 54 · games and stuff</title>
+<style>
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; --panel: #b9c2cf; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; --panel: #3c4655; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; --panel: #3c4655; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .bob { animation: bob 2.4s ease-in-out infinite; }
+  .roll { animation: roll 3s ease-in-out infinite alternate; }
+  .wobble { animation: wobble 2.6s ease-in-out infinite; }
+  .pulse { animation: pulse 1.8s ease-in-out infinite; }
+  .c1 { animation: crumb 2.2s ease-in-out infinite; }
+  .c2 { animation: crumb 2.2s ease-in-out .5s infinite; }
+  .c3 { animation: crumb 2.2s ease-in-out 1s infinite; }
+  .peck { animation: peck 1.6s ease-in-out infinite; }
+  .bob, .roll, .wobble, .pulse, .c1, .c2, .c3, .peck { transform-box: fill-box; transform-origin: center; }
+  @keyframes crumb { 50% { transform: translateY(-3px) scale(.85); } }
+  @keyframes peck { 50% { transform: rotate(-12deg) translateY(2px); } }
+  @keyframes bob { 50% { transform: translateY(-6px); } }
+  @keyframes roll { to { transform: translateX(18px); } }
+  @keyframes wobble { 50% { transform: scale(.94, 1.04); } }
+  @keyframes pulse { 50% { transform: scale(1.08); } }
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .sheet { fill: var(--paper); }
+  .hero .body { fill: var(--wall); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  .slide { animation: slide 3s ease-in-out infinite alternate; }
+  .slide { transform-box: fill-box; transform-origin: center; }
+  @keyframes slide { to { transform: translateY(34px); } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible, .opt:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  fieldset.grp { border: 0; margin: 16px auto; padding: 0; max-width: 360px; text-align: left; }
+  legend { font-weight: 700; padding: 0; margin-bottom: 8px; }
+  .opt { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin: 6px 0; background: var(--soft); border-radius: 8px; cursor: pointer; }
+  .dot { flex: none; width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--ink); background: var(--paper); box-sizing: border-box; }
+  .opt[aria-checked="true"] .dot { background: radial-gradient(var(--accent) 0 5px, var(--paper) 6px); }
+  .opt small { opacity: .7; margin-left: auto; }
+  .grp[aria-disabled="true"] .opt { cursor: default; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="Three round radio buttons in a column, the filled dot sliding down from one to the next as a pointing hand reaches for the first">
+    <g stroke="currentColor" stroke-width="2.5" fill="none"><circle class="sheet" cx="60" cy="26" r="13"/><circle class="sheet" cx="60" cy="60" r="13"/><circle class="sheet" cx="60" cy="94" r="13"/></g>
+    <path d="M86 26h70M86 60h54M86 94h62" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <g class="slide"><circle cx="60" cy="26" r="7" fill="#1a6ef0" stroke="currentColor" stroke-width="2"/></g>
+    <g class="peck"><path d="M170 14l-22 10 22 8z" fill="#ffb020" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></g>
+    <path d="M10 112h180" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  </svg></div>
+<h1>Radio 54</h1><p class="blurb">Pick one. It picks the one after.</p>
+<div class="goal" id="goal"></div>
+<div class="grp" role="radiogroup" aria-labelledby="lg" id="grp"><div id="lg" style="font-weight:700;margin-bottom:8px">Delivery speed</div></div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<p class="hint">Click, or Tab, arrows, Enter and Space. Nothing is sent or kept.</p>
+<div class="row"><button type="button" class="ghost" id="reset">Start again</button></div>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled || b.getAttribute("aria-disabled") === "true") return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  // Choosing an option selects the one after it. Choosing the option you already have is the only way it stays.
+  const OPTS = [["Yesterday", "£90"], ["Same day", "£40"], ["Next day", "£12"], ["Express", "£6"], ["Standard", "free"]];
+  let sel, done, els = [];
+  const grp = $("grp");
+  OPTS.forEach((o, i) => {
+    const d = document.createElement("div");
+    d.className = "opt"; d.setAttribute("role", "radio");
+    d.innerHTML = '<span class="dot"></span><span></span><small></small>';
+    d.children[1].textContent = o[0]; d.children[2].textContent = o[1];
+    d.onclick = (e) => pick(i, e);
+    d.onkeydown = (e) => {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); pick(i, e); }
+      else if (/^Arrow(Down|Right)$/.test(e.key)) { e.preventDefault(); pick((i + 1) % OPTS.length, e); }
+      else if (/^Arrow(Up|Left)$/.test(e.key)) { e.preventDefault(); pick((i + OPTS.length - 1) % OPTS.length, e); }
+    };
+    grp.appendChild(d); els.push(d);
+  });
+  function paint(focus) {
+    els.forEach((d, i) => {
+      d.setAttribute("aria-checked", String(i === sel));
+      d.tabIndex = i === sel ? 0 : -1;
+    });
+    if (focus) els[sel].focus();
+  }
+  function pick(i, e) {
+    if (done) return;
+    if (e.type === "click") {
+      const r = els[i].getBoundingClientRect();
+      confetti(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2);
+    }
+    if (i === sel) {
+      done = true;
+      grp.setAttribute("aria-disabled", "true");
+      $("goal").textContent = "Confirmed.";
+      $("msg").textContent = "You chose " + OPTS[i][0] + " and you already had " + OPTS[i][0] + ". Order confirmed.";
+      const r = els[i].getBoundingClientRect();
+      if (e.type !== "click") confetti(r.left + r.width / 2, r.top + r.height / 2);
+      return;
+    }
+    const to = (i + 1) % OPTS.length;
+    $("goal").textContent = "Not that one.";
+    $("msg").textContent = "You chose " + OPTS[i][0] + ". We have selected " + OPTS[to][0] + ". It is nearly the same.";
+    sel = to;
+    paint(true);
+  }
+  function start() {
+    done = false; sel = 2;
+    grp.removeAttribute("aria-disabled");
+    $("goal").textContent = ""; $("msg").textContent = "";
+    paint(false);
+  }
+  $("reset").onclick = start;
+  start();
+</script>
+</body>
+</html>
