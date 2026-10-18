@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `signature` | A delivery signature pad that refuses any signature it can read. Scribble, then end with a line underneath as the last stroke; a neat name is rejected as too legible. Draw with the mouse or a finger, or focus the pad and use Space and the arrow keys (Shift for bigger steps). Nothing is sent or kept. |
 | `code` | A six-box verification code field, with the code in a text that says never to share it. Any digit that matches the code is refused as shared; six wrong digits get you verified. Click the keys, or type, with Backspace and arrows. Nothing is sent or kept. |
 | `bell` | A notification bell with three unread items. Each Mark all as read makes a new notification about having marked them, and the fourth press, Turn off notifications, is the only way to nothing new (and one email). Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `radio` | A delivery-speed radio group (Yesterday, Same day, Next day, Express, Standard) that selects the option after the one you chose. Choosing the option it already has is the only way it stays. Click, or Tab, arrows, Enter and Space. Nothing is sent or kept. |

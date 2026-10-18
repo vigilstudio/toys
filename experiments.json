@@ -1,5 +1,13 @@
 [
   {
+    "slug": "signature-0057",
+    "type": "signature",
+    "title": "Signature 57",
+    "blurb": "Sign here. Legibly is not an option.",
+    "date": "2026-10-18T06:21:18.000Z",
+    "art": "<svg viewBox=\"0 0 200 120\" role=\"img\" aria-label=\"A form with a signature line, a scribble above it and a pen scribbling back and forth\">\n    <rect x=\"30\" y=\"8\" width=\"110\" height=\"104\" rx=\"6\" class=\"sheet\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n    <path d=\"M44 30h60M44 42h80M44 54h44\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" opacity=\".45\"/>\n    <path d=\"M44 88c8-22 14-22 18-4s8 4 14-8 10 8 16-2 8-6 14 0\" class=\"ink\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M42 98h86\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n    <g class=\"scrawl\"><path d=\"M150 96 l26 -52 l6 3 l-26 52 z\" fill=\"#ffb020\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M150 96 l-2 8 l8 -3 z\" fill=\"currentColor\"/></g>\n  </svg>"
+  },
+  {
     "slug": "code-0056",
     "type": "code",
     "title": "Code 56",

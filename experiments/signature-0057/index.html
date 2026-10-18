@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signature 57 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .sheet { fill: var(--paper); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .scrawl { animation: scrawl 1.1s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: bottom left; }
+  .ink { stroke-dasharray: 200; animation: draw 3s ease-in-out infinite alternate; }
+  @keyframes scrawl { to { transform: translate(-16px, 3px) rotate(-4deg); } }
+  @keyframes draw { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+  .hero .sheet { fill: var(--paper); }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible, canvas:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .form { max-width: 360px; margin: 12px auto; text-align: left; background: var(--wall); border-radius: 8px; padding: 12px; }
+  .form b { display: block; margin-bottom: 8px; }
+  canvas { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; background: var(--paper); border-radius: 6px; cursor: crosshair; box-shadow: inset 0 0 0 2px var(--ink); }
+  canvas.done { cursor: default; box-shadow: inset 0 0 0 3px #2bb673; }
+  .tag { font-size: .8rem; opacity: .7; margin-top: 6px; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A form with a signature line, a scribble above it and a pen scribbling back and forth">
+    <rect x="30" y="8" width="110" height="104" rx="6" class="sheet" stroke="currentColor" stroke-width="2.5"/>
+    <path d="M44 30h60M44 42h80M44 54h44" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".45"/>
+    <path d="M44 88c8-22 14-22 18-4s8 4 14-8 10 8 16-2 8-6 14 0" class="ink" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M42 98h86" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <g class="scrawl"><path d="M150 96 l26 -52 l6 3 l-26 52 z" fill="#ffb020" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M150 96 l-2 8 l8 -3 z" fill="currentColor"/></g>
+  </svg></div>
+<h1>Signature 57</h1><p class="blurb">Sign here. Legibly is not an option.</p>
+<div class="form"><b>Delivery received. Signature of recipient:</b>
+<canvas id="pad" width="640" height="320" tabindex="0" role="img" aria-label="Signature pad. Press Space to put the pen down or lift it, and the arrow keys to move it. Shift makes it move further."></canvas>
+<div class="tag">&#10005; ______________________________</div></div>
+<div class="goal" id="goal"></div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<div class="row"><button type="button" id="submit">Submit signature</button><button type="button" class="ghost" id="clear">Clear</button></div>
+<p class="hint">Draw with the mouse or a finger, or focus the pad and use Space and the arrow keys. Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  const cv = $("pad"), cx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  // A signature is a scribble with an underline. Anything you can read is refused.
+  let strokes = [], down = false, done = false, kx = 40, ky = H / 2, kdown = false, kbd = false;
+
+  const len = (s) => { let t = 0; for (let i = 1; i < s.length; i++) t += Math.hypot(s[i][0] - s[i-1][0], s[i][1] - s[i-1][1]); return t; };
+  const span = (ss) => { let a = 1e9, b = -1e9; ss.forEach((s) => s.forEach((p) => { a = Math.min(a, p[0]); b = Math.max(b, p[0]); })); return Math.max(1, b - a); };
+
+  function draw() {
+    cx.clearRect(0, 0, W, H);
+    cx.strokeStyle = getComputedStyle(cv).color; cx.lineWidth = 5; cx.lineCap = "round"; cx.lineJoin = "round";
+    strokes.forEach((s) => {
+      cx.beginPath();
+      s.forEach((p, i) => i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1]));
+      if (s.length === 1) cx.lineTo(s[0][0] + .1, s[0][1]);
+      cx.stroke();
+    });
+    if (kbd && !done) {
+      cx.fillStyle = kdown ? "#d93025" : "#1a6ef0";
+      cx.beginPath(); cx.arc(kx, ky, kdown ? 6 : 9, 0, 7); if (kdown) cx.fill(); else { cx.lineWidth = 3; cx.strokeStyle = "#1a6ef0"; cx.stroke(); }
+    }
+  }
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  new MutationObserver(draw).observe(document.documentElement, { attributes: true });
+
+  const at = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+  cv.addEventListener("pointerdown", (e) => {
+    if (done) return;
+    e.preventDefault(); cv.setPointerCapture(e.pointerId);
+    down = true; kbd = false; strokes.push([at(e)]); draw();
+  });
+  cv.addEventListener("pointermove", (e) => { if (down) { strokes[strokes.length - 1].push(at(e)); draw(); } });
+  const up = () => { down = false; };
+  cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+
+  function pen(on) {
+    if (on === kdown) return;
+    kdown = on;
+    if (on) strokes.push([[kx, ky]]);
+  }
+  cv.addEventListener("keydown", (e) => {
+    if (done || e.ctrlKey || e.metaKey || e.altKey) return;
+    const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (e.key === " ") { e.preventDefault(); if (!e.repeat) { kbd = true; pen(!kdown); draw(); } }
+    else if (d) {
+      e.preventDefault(); kbd = true;
+      const st = e.shiftKey ? 40 : 10;
+      kx = Math.max(4, Math.min(W - 4, kx + d[0] * st)); ky = Math.max(4, Math.min(H - 4, ky + d[1] * st));
+      if (kdown) strokes[strokes.length - 1].push([kx, ky]);
+      draw();
+    }
+  });
+  cv.addEventListener("focus", () => { if (!down) { kbd = true; draw(); } });
+  cv.addEventListener("blur", () => { kbd = false; kdown = false; draw(); });
+
+  const NO = ["Too legible. A signature should not be possible to read.", "That reads as a name. Names are not accepted here.", "We could make that out. Please try again, worse."];
+  let r = 0;
+  function judge() {
+    const ss = strokes.filter((s) => len(s) > 6);
+    if (!ss.length) return ["Nothing signed.", "The line is blank. Please sign above it."];
+    const last = ss[ss.length - 1], rest = ss.slice(0, -1);
+    const all = span(ss), l = len(last);
+    const line = l >= .6 * all && Math.hypot(last[last.length-1][0] - last[0][0], last[last.length-1][1] - last[0][1]) >= .85 * l && Math.abs(last[last.length-1][1] - last[0][1]) <= .25 * l;
+    const scrawl = rest.length ? rest.reduce((a, s) => a + len(s), 0) / span(rest) : 0;
+    if (!line) return ["No flourish.", "Every signature ends in a line underneath. Add one, as the last stroke."];
+    if (scrawl < 4) return ["Rejected.", NO[r++ % NO.length]];
+    return null;
+  }
+  $("submit").onclick = () => {
+    if (done) return;
+    const bad = judge();
+    if (bad) { $("goal").textContent = bad[0]; $("msg").textContent = bad[1]; return; }
+    done = true; kbd = false; kdown = false; cv.classList.add("done"); draw();
+    $("goal").textContent = "Accepted.";
+    $("msg").textContent = "Matches the signature on file. Neither of them can be read.";
+    const q = cv.getBoundingClientRect();
+    confetti(q.left + q.width / 2, q.top);
+  };
+  $("clear").onclick = () => {
+    strokes = []; done = false; down = false; kdown = false; r = 0; kx = 40; ky = H / 2;
+    cv.classList.remove("done"); $("goal").textContent = ""; $("msg").textContent = ""; draw();
+  };
+  draw();
+</script>
+</body>
+</html>
