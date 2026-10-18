@@ -1,5 +1,13 @@
 [
   {
+    "slug": "cart-0058",
+    "type": "cart",
+    "title": "Cart 58",
+    "blurb": "One spoon. Free delivery is always one spoon away.",
+    "date": "2026-10-18T08:21:48.000Z",
+    "art": "<svg viewBox=\"0 0 200 120\" role=\"img\" aria-label=\"A shopping basket with a spoon in it, and a delivery van that stays just out of reach\">\n    <g class=\"bask\"><path d=\"M52 52h96l-10 52H62z\" class=\"sheet\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/>\n    <path d=\"M52 52c6-34 90-34 96 0\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n    <path d=\"M72 62l4 34M100 62v34M128 62l-4 34\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" opacity=\".45\"/>\n    <g class=\"spoon\"><ellipse cx=\"100\" cy=\"30\" rx=\"8\" ry=\"11\" fill=\"#ffb020\" stroke=\"currentColor\" stroke-width=\"2.5\"/><path d=\"M100 41v28\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/></g></g>\n    <g class=\"van\"><rect x=\"150\" y=\"84\" width=\"34\" height=\"18\" rx=\"3\" fill=\"#2bb673\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"158\" cy=\"106\" r=\"4\" class=\"sheet\" stroke=\"currentColor\" stroke-width=\"2.5\"/><circle cx=\"177\" cy=\"106\" r=\"4\" class=\"sheet\" stroke=\"currentColor\" stroke-width=\"2.5\"/></g>\n  </svg>"
+  },
+  {
     "slug": "signature-0057",
     "type": "signature",
     "title": "Signature 57",
