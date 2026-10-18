@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reaction 62 · games and stuff</title>
+<style>
+
+
+
+  :root { --ink: #111; --paper: #fff; --accent: #1a6ef0; --on-accent: #fff; --soft: #e7e7e7; --wall: #dfe8f5; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  }
+  :root[data-theme="dark"] { --ink: #eee; --paper: #161616; --accent: #6aa8ff; --on-accent: #111; --soft: #262626; --wall: #26303d; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Roboto, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; text-align: center; overflow-x: clip; }
+  h1 { font-size: 2rem; margin: 24px 0 4px; }
+  .blurb { opacity: .75; margin: 0 0 24px; }
+  button { font: inherit; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 6px; padding: 10px 16px; cursor: pointer; margin: 4px; }
+  button:disabled, button[aria-disabled="true"] { opacity: .6; cursor: default; }
+  button.ghost { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .big { font-size: 3rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: 16px 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .card { background: var(--soft); border-radius: 8px; padding: 12px; margin: 8px 0; }
+  a.back { display: inline-block; margin-top: 32px; color: var(--accent); }
+  canvas { max-width: 100%; background: var(--soft); border-radius: 8px; touch-action: none; }
+  select { font: inherit; padding: 8px; max-width: 100%; }
+
+  .hero { margin: 8px auto 0; max-width: 260px; }
+  .hero svg { width: 100%; height: auto; color: var(--ink); }
+  .hero .bubble { fill: var(--wall); }
+  .confetti { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; animation: pop .9s ease-out forwards; z-index: 9; }
+  @keyframes pop { to { transform: translate(var(--dx), var(--dy)) rotate(360deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+  .arrow { animation: up 1.4s ease-in-out infinite; }
+  .f1, .f2, .f3 { transform-box: fill-box; transform-origin: center; animation: pop2 2.4s ease-in-out infinite; }
+  .f2 { animation-delay: .3s; } .f3 { animation-delay: .6s; }
+  @keyframes up { 50% { transform: translateY(-4px); } }
+  @keyframes pop2 { 50% { transform: scale(1.2); } }
+  .goal { min-height: 1.6em; font-weight: 700; }
+  .msg { min-height: 3.6em; margin: 8px 0; }
+  .hint { font-size: .9rem; opacity: .75; text-wrap: balance; }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .sheet2 { background: var(--soft); border-radius: 14px; padding: 12px; margin: 12px auto; max-width: 360px; }
+  .photo { display: flex; align-items: center; gap: 10px; text-align: left; margin-bottom: 8px; }
+  .photo svg { width: 64px; height: 44px; flex: none; border-radius: 6px; }
+  .targets { display: grid; gap: 8px; }
+  .targets button { margin: 0; text-align: left; }
+  .post { text-align: left; font-weight: 700; margin-bottom: 8px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .bar button { margin: 0; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); font-size: 1.1rem; min-width: 52px; min-height: 44px; }
+  .bar button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); box-shadow: none; }
+  .bar small { display: block; font-size: .75rem; font-variant-numeric: tabular-nums; min-height: 1em; }
+</style>
+</head>
+<body>
+<main id="page">
+<div class="hero"><svg viewBox="0 0 200 120" role="img" aria-label="A speech bubble with a thumbs up, and a row of small emoji faces rising out of it">
+    <rect class="bubble" x="50" y="14" width="100" height="48" rx="10" stroke="currentColor" stroke-width="2.5"/>
+    <path class="bubble" d="M80 62l-6 12 18-12z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M72 30h56M72 44h34" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <g class="f1"><circle cx="100" cy="92" r="8" fill="#ffb020" stroke="currentColor" stroke-width="2"/><path d="M96 92q4 4 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+    <g class="f2"><circle cx="76" cy="102" r="8" fill="#ff5c8a" stroke="currentColor" stroke-width="2"/><circle cx="124" cy="102" r="8" fill="#2bb673" stroke="currentColor" stroke-width="2"/></g>
+    <g class="f3"><circle cx="54" cy="110" r="7" fill="#1a6ef0" stroke="currentColor" stroke-width="2"/><circle cx="100" cy="112" r="7" fill="#ffb020" stroke="currentColor" stroke-width="2"/><circle cx="148" cy="110" r="7" fill="#ff5c8a" stroke="currentColor" stroke-width="2"/></g>
+  </svg></div>
+<h1>Reaction 62</h1><p class="blurb">One sandwich. One thumb.</p>
+<div class="sheet2">
+  <div class="post">Had a sandwich.</div>
+  <div class="bar" role="group" aria-label="React to this post" id="bar"></div>
+</div>
+<div class="goal" id="goal">React with one thumb.</div>
+<p class="msg" id="msg" role="status" aria-live="polite"></p>
+<div class="row"><button type="button" id="hide">Hide reactions</button><button type="button" class="ghost" id="reset">Start over</button></div>
+<p class="hint">Nothing is sent or kept.</p>
+<a class="back" href="../../">&larr; all games and stuff</a>
+</main>
+<script>
+  const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function confetti(x, y) {
+    if (calm()) return;
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement("span");
+      s.className = "confetti";
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      s.style.setProperty("--dx", (Math.random() * 160 - 80) + "px");
+      s.style.setProperty("--dy", (Math.random() * -160 - 20) + "px");
+      s.style.background = ["#1a6ef0", "#ffb020", "#ff5c8a", "#2bb673"][i % 4];
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 900);
+    }
+  }
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    const r = b.getBoundingClientRect();
+    confetti(e.detail ? e.clientX : r.left + r.width / 2, e.detail ? e.clientY : r.top + r.height / 2);
+  });
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.toLocaleString("en-GB");
+  const E = [["\u{1F44D}","thumbs up"],["\u2764\uFE0F","heart"],["\u{1F602}","laughing"],["\u{1F62E}","surprised"],["\u{1F622}","sad"],["\u{1F621}","angry"]];
+  const lines = ["Your reaction was noticed.", "Someone reacted to your reaction.", "A stranger reacted to that.", "Your reaction is trending in a city you have not visited.", "The sandwich has a fan page.", "The sandwich has issued a statement."];
+  let counts, mine, steps, hidden, over;
+  const note = (t) => { $("msg").textContent = t; };
+  function draw() {
+    E.forEach((e, i) => {
+      const b = $("r" + i);
+      b.setAttribute("aria-pressed", String(mine === i));
+      b.querySelector("small").textContent = hidden ? "" : fmt(counts[i]);
+      b.setAttribute("aria-label", hidden ? e[1] : e[1] + ", " + fmt(counts[i]));
+    });
+  }
+  function init() {
+    counts = E.map(() => 0); mine = -1; steps = 0; hidden = false; over = false;
+    $("goal").textContent = "React with one thumb."; note(""); $("hide").disabled = false; draw();
+  }
+  E.forEach((e, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.id = "r" + i; b.setAttribute("aria-label", e[1]);
+    b.innerHTML = e[0] + "<small></small>";
+    b.onclick = () => {
+      if (over) return;
+      if (mine === i) { mine = -1; counts[i] = Math.max(counts[i] - 1, 0); steps++; note(counts[i] ? "Reaction removed. The " + fmt(counts[i]) + " who reacted to it remain." : "Reaction removed. Nobody noticed. The sandwich is relieved."); draw(); return; }
+      const prev = mine;
+      mine = i;
+      counts[i] = counts[i] === 0 ? 1 : counts[i] * 40;
+      for (let j = 0; j < E.length; j++) if (j !== i && counts[j] > 0) counts[j] *= 6;
+      if (prev >= 0) counts[prev] = Math.max(counts[prev] - 1, 0);
+      note(lines[Math.min(steps, lines.length - 1)]); steps++; draw();
+    };
+    $("bar").appendChild(b);
+  });
+  $("hide").onclick = () => {
+    if (over) return;
+    over = true; hidden = true; draw();
+    $("goal").textContent = "Calm.";
+    note(counts.some((c) => c) ? "Reactions hidden. They are all still happening." : "Reactions hidden. There were none. Well done.");
+    $("hide").disabled = true;
+  };
+  $("reset").onclick = init;
+  init();
+</script>
+</body>
+</html>
