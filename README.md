@@ -17,6 +17,7 @@ Each experiment has one original SVG illustration at the top, and the landing gr
 
 | Type | What it does |
 |---|---|
+| `share` | A share sheet with one photo and three ways to send it: Mum, a family group of 47, or Copy link. Each pick spreads the photo to everyone they know (3x, 9x, or the whole internet); asking for one person never stays one. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `trash` | A bin with one item and an Empty trash button. Delete permanently deletes it and saves a receipt for the deletion, which is the new one item; Cancel is the only way to an empty trash. Click, or Tab, Enter and Space. Nothing is sent or kept. |
 | `crop` | A group photo with a round crop box. Drag it, or use the arrow keys, to crop out the stranger; the stranger always costs a share of you. Nothing is sent or kept. |
 | `cart` | A basket with one spoon at £6.00 and free delivery at £40.00. Every Add to basket moves free delivery to £3.50 beyond the total, until the sixth spoon, which unlocks it with a £7.00 handling fee. Remove one and Empty basket work too. Click, or Tab, Enter and Space. Nothing is sent or kept. |
